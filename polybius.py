@@ -26,7 +26,8 @@ def get_one_time_pad(numbers):
 
 
 def dec_to_bin(x):
-    return int(bin(x)[2:])
+    start = '00'
+    return start + str(int(bin(x)[2:]))
 
 
 if __name__ == '__main__':
@@ -36,3 +37,4 @@ if __name__ == '__main__':
 
    print(polybius(comp_key[:-2]))
    print(get_one_time_pad(comp_key))
+   print(dec_to_bin(11))
