@@ -83,6 +83,8 @@ if __name__ == '__main__':
    one_time = get_one_time_pad(comp_key)
 
    trans_key = polybius(comp_key[:-2])
+   print('transposition key' , trans_key)
+   print('one time pad key: ', one_time)
 
    coordinates = get_coordinates(trans_key)
 
