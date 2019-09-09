@@ -1,3 +1,4 @@
+from pip._vendor.distlib.compat import raw_input
 
 
 SQUARE = [
@@ -17,4 +18,21 @@ def polybius(numbers):
 
     return ret
 
+def get_one_time_pad(numbers):
 
+    numbers_length = len(numbers)
+    one_time_pad = int(numbers[numbers_length -2] + numbers[numbers_length - 1])
+    return(one_time_pad)
+
+
+def dec_to_bin(x):
+    return int(bin(x)[2:])
+
+
+if __name__ == '__main__':
+
+   comp_key = raw_input('Enter Composite Key: ')
+
+
+   print(polybius(comp_key[:-2]))
+   print(get_one_time_pad(comp_key))
