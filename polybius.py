@@ -55,13 +55,12 @@ def columnar_transposition_technique(key, message):
 
     keylist = [[] for i in key]
     for i in range(len(message)):
-        keylist[i%len(key)].append(message[i])
+        keylist[i%len(keylist)].append(message[i])
+    print(keylist)
 
-    matrix = pd.DataFrame(columns=[i for i in key])
-    for i in range(len(matrix)):
-        matrix.iloc[:len(keylist[i]),i] = keylist[i]
-    transpose = matrix.transpose()
-    transpose = transpose.sort_index()
+    matrix = pd.DataFrame(keylist, index=[i for i in key])
+    transpose = matrix.sort_index()
+
     newcode = ''
     for i in range(len(transpose.index)):
         for j in transpose.iloc[i,:]:
@@ -100,6 +99,7 @@ def one_pad_crypto_technique(coordinates, one_time_key):
 if __name__ == '__main__':
 
    comp_key = raw_input('Enter Composite Key: ')
+   message = raw_input('Enter Secret Message: ')
    one_time = get_one_time_pad(comp_key)
 
    trans_key = polybius(comp_key[:-2])
@@ -107,5 +107,7 @@ if __name__ == '__main__':
    print('one time pad key: ', one_time)
 
    coordinates = get_coordinates(trans_key)
+   cipher = columnar_transposition_technique(comp_key, message)
 
+   print('Cipher1: ', cipher)
    print('Ciphertext: ', one_pad_crypto_technique(coordinates, one_time))
