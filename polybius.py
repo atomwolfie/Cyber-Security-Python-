@@ -11,6 +11,11 @@ SQUARE = [
         ['9', 'i', 's', '5', 't', 'l']
         ]
 
+REVERSE_SQUARE = {}
+for i in range(6):
+    for j in range(6):
+        REVERSE_SQUARE[SQUARE[i][j]] = '{}{}'.format(i,j)
+
 def polybius(numbers):
     # takes a string of numbers and runs them through the polybius square
     ret = ''
@@ -36,17 +41,10 @@ def dec_to_bin(x):
 def get_coordinates(trans_key):
     #takes the transposition key and gets the corrdinate value for each letter,
     # returned in an array
-    rows = 6
-    columns = 6
-
     coordinates = []
 
     for letter in trans_key:
-        for i in range(rows):
-            for j in range(columns):
-                if letter == SQUARE[i][j]:
-                    addition = str(i) + str(j)
-                    coordinates.append(addition)
+        coordinates.append(REVERSE_SQUARE[letter])
     return coordinates
 
 def columnar_transposition_technique(key, message):
@@ -105,12 +103,39 @@ def one_pad_crypto_technique(coordinates, one_time_key):
 
     return(final_ciphertext)
 
+def reverse_one_time_pad(ciphertext, key):
+    # xors every 2 digit number in cipher text with key
+    ret = ''
+    key = int(key)
+    for i in range(len(ciphertext))[::2]:
+        ret += str(int(ciphertext[i:i+2]) ^ key).zfill(2)
+    return ret
 
+def encrypt(comp_key, plain_text):
+
+    trans_key = polybius(comp_key[:-2])
+    one_time = get_one_time_pad(comp_key)
+    print('transposition key' , trans_key)
+    print('one time pad key: ', one_time)
+    cipher1 = columnar_transposition_technique(trans_key, plain_text)
+    coordinates = get_coordinates(cipher1)
+    print('Cipher1: ', cipher1)
+    final_cipher = one_pad_crypto_technique(coordinates, one_time)
+    print('Ciphertext: ', final_cipher)
+    return final_cipher
+
+def decrypt(comp_key, cipher_text):
+    trans_key = polybius(comp_key[:-2])
+    one_time = get_one_time_pad(comp_key)
+
+    cipher1 = reverse_one_time_pad(cipher_text, comp_key[-2:])
+    plain_text = polybius(cipher1)
+    print('Plain Text: {}'.format(plain_text))
+    return plain_text
+    
 
 if __name__ == '__main__':
 
-   comp_key = raw_input('Enter Composite Key: ')
-   message = raw_input('Enter Secret Message: ')
    one_time = get_one_time_pad(comp_key)
 
    trans_key = polybius(comp_key[:-2])
