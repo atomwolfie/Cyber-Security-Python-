@@ -1,4 +1,5 @@
 from pip._vendor.distlib.compat import raw_input
+import pandas as pd
 
 
 SQUARE = [
@@ -48,6 +49,25 @@ def get_coordinates(trans_key):
                     coordinates.append(addition)
     return coordinates
 
+def columnar_transposition_technique(key, message):
+    #takes a key and a message, both strings.
+    #returns the encrypted cipher
+
+    keylist = [[] for i in key]
+    for i in range(len(message)):
+        keylist[i%len(key)].append(message[i])
+
+    matrix = pd.DataFrame(columns=[i for i in key])
+    for i in range(len(matrix)):
+        matrix.iloc[:len(keylist[i]),i] = keylist[i]
+    transpose = matrix.transpose()
+    transpose = transpose.sort_index()
+    newcode = ''
+    for i in range(len(transpose.index)):
+        for j in transpose.iloc[i,:]:
+            if pd.notna(j):
+                newcode += j
+    return newcode
 
 def one_pad_crypto_technique(coordinates, one_time_key):
 
