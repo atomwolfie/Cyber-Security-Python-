@@ -71,7 +71,7 @@ def one_pad_crypto_technique(coordinates, one_time_key):
                 new_binary += '1'
             else:
                 new_binary += '0'
-        final_ciphertext += str(int(new_binary))
+        final_ciphertext += str(int(new_binary,2))
 
     return(final_ciphertext)
 
