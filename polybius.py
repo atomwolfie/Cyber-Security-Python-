@@ -102,6 +102,7 @@ def one_pad_crypto_technique(coordinates, one_time_key):
             temp_text = '0' + temp_text
         final_ciphertext += temp_text
 
+
     return(final_ciphertext)
 
 
