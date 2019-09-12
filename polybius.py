@@ -69,6 +69,48 @@ def columnar_transposition_technique(key, message):
                 newcode += j
     return newcode
 
+def reverse_columnar_transposition(key, cipher):
+    #get length of each row
+    length = len(cipher)//len(key)  # minimum length of the rows in the matrix
+    longQty = len(cipher)%len(key)  # how many rows are one longer than minimum
+
+    sorted_key = list(key)
+    sorted_key.sort()
+    message_list = []
+    start = 0
+    end = 0
+
+    #put letters into correct groups
+    for i in range(len(sorted_key)):
+        if i in key[:longQty]:
+            tempvalue = length + 1
+        else:
+            tempvalue = length
+        end += tempvalue
+        message_list[i].append(cipher[start:end])
+        start = end
+
+    #store letters in dataframe then transpose to get the message
+    matrix = pd.DataFrame(messagelist, index=[i for i in sorted_key])
+    i = 0
+    while i < len(key):
+        if sorted_key[i] != key[i]:
+            l1 = sorted_key[i]
+            l2 = key[i]
+            temp = matrix.loc[l1].copy()
+            matrix.loc[l1] = matrix.loc[l2]
+            matrix.loc[l2] = temp
+            #reindex
+            index = matrix.index
+            copy = sorted_key[index.get_loc(l1)]
+            sorted_key[index.get_loc(l1)] = l2
+            sorted_key[index.get_loc(l2)] = copy
+            matrix.index = sorted_key
+        i+=1
+    print(sorted_key)
+    print(matrix)
+    assert(sorted_key == list(key))
+        
 def one_pad_crypto_technique(coordinates, one_time_key):
 
     one_time_binary = dec_to_bin(int(one_time_key))
