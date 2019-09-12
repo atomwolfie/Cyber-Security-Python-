@@ -31,11 +31,9 @@ def get_one_time_pad(numbers):
     one_time_pad = int(numbers[numbers_length -2] + numbers[numbers_length - 1])
     return(one_time_pad)
 
-
 def dec_to_bin(x):
     #converts integers to decimal form
-    start = '00'
-    return start + str(bin(x)[2:])
+    return str(bin(x)[2:]).zfill(10)
 
 
 def get_coordinates(trans_key):
@@ -69,6 +67,7 @@ def columnar_transposition_technique(key, message):
                 newcode += j
     return newcode
 
+
 def one_pad_crypto_technique(coordinates, one_time_key):
 
     one_time_binary = dec_to_bin(int(one_time_key))
@@ -84,10 +83,6 @@ def one_pad_crypto_technique(coordinates, one_time_key):
     for item in coordinates_in_binary:
         new_binary = ''
         
-        #keep binary at the same length
-        item = '0' * (len(one_time_binary) - len(item)) + item
-        one_time_binary = '0' * (len(item) - len(one_time_binary)) + one_time_binary
-
         for i in range(len(one_time_binary)):
             if item[i] != one_time_binary[i]:
                 new_binary += '1'
@@ -95,12 +90,8 @@ def one_pad_crypto_technique(coordinates, one_time_key):
                 new_binary += '0'
 
         #make sure we have two digits for each character 
-        temp_text = str(int(new_binary, 2))
-        if len(temp_text) < 2:
-            temp_text = '0' + temp_text
+        temp_text = str(int(new_binary, 2)).zfill(2)
         final_ciphertext += temp_text
-
-
     return(final_ciphertext)
 
 def reverse_one_time_pad(ciphertext, key):
@@ -135,15 +126,34 @@ def decrypt(comp_key, cipher_text):
     
 
 if __name__ == '__main__':
+    comp_key = '1422555515'
+    message = 'hellomynameis'
 
-   one_time = get_one_time_pad(comp_key)
+    #Encrypt
+    one_time = get_one_time_pad(comp_key)
+    trans_key = polybius(comp_key[:-2])
+    cipher1 = columnar_transposition_technique(trans_key, message)
+    coordinates = get_coordinates(cipher1)
+    finalcipher = one_pad_crypto_technique(coordinates, one_time)
 
-   trans_key = polybius(comp_key[:-2])
-   print('transposition key' , trans_key)
-   print('one time pad key: ', one_time)
+    assert(one_time == 15)
+    assert(trans_key == 'ball')
+    assert(cipher1 == 'emmhoaslyelni')
+    assert(coordinates == ['00','05','05','11','20','22','52','55','10','00','55','23','51'])
+    assert(finalcipher == '15101004272559560515562460')
 
-   cipher1 = columnar_transposition_technique(trans_key, message)
-   coordinates = get_coordinates(cipher1)
+    print('transposition key' , trans_key)
+    print('one time pad key: ', one_time)
+    print('Cipher1: ', cipher1)
+    print('coordinates: ', coordinates)
+    print('Ciphertext: ', finalcipher)
 
-   print('Cipher1: ', cipher1)
-   print('Ciphertext: ', one_pad_crypto_technique(coordinates, one_time))
+    #Decrypt
+    decipher1 = reverse_one_time_pad(finalcipher, comp_key[-2:])
+    decipher1 = polybius(decipher1)
+    plain_text = ''
+    assert(decipher1 == cipher1)
+    assert(plain_text == message)
+
+
+
