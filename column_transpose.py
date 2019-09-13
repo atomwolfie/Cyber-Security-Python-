@@ -1,4 +1,5 @@
 import numpy as np
+import itertools
 
 def sort_key(key):
     sorted_key = list(key)
@@ -10,28 +11,34 @@ def sort_key(key):
 
 
 def encode(key, plain_text):
-    first = [[] for i in key]
-
-    for i in range(len(plain_text)):
-        first[i % len(key)].append(plain_text[i])
+    first = wrap_text(plain_text, key)
     
     skey, numbers = sort_key(key)
     final = [first[i] for i in numbers]
-    print(first)
     return unwrap_matrix(final)
 
 def decode(key, cipher_text):
-    first = [[] for i in key]
-
-    for i in range(len(cipher_text)):
-        first[i % len(key)].append(cipher_text[i])
+    first = wrap_text(cipher_text, key)
 
     skey, numbers = sort_key(key)
-
-    final = [first[i] for i in numbers]
+    
+    final = [[] for i in key]
+    for i in range(len(numbers)):
+        final[numbers[i]] = first[i]
     
     return unwrap_matrix(final)
 
+
+def test(key, plain):
+    decoded = decode(key, encode(key, plain))
+    assert plain == decoded
+
 def unwrap_matrix(mat):
-    zipped = zip(*[i for i in mat])
-    return ''.join([''.join([i for i in j]) for j in mat])
+    zipped = itertools.zip_longest(*[i for i in mat], fillvalue='')
+    return ''.join([''.join([i for i in j]) for j in zipped])
+
+def wrap_text(text, key):
+    ret = [[] for i in key]
+    for i in range(len(text)):
+        ret[i % len(key)].append(text[i])
+    return ret
