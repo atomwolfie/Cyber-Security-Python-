@@ -130,7 +130,13 @@ if __name__ == '__main__':
     #comp_key = '22024422230021'
     comp_key = raw_input('Composite key: ')
     #message = 'asecretmessage'
-    message = raw_input('Plain text: ')
+    original_message = raw_input('Plain text: ')
+
+    #removing whitespace
+    message_nostrings = original_message.replace(' ','')
+    
+    #converting to all lowercase
+    message = message_nostrings.lower()
 
     #Encrypt
     one_time = get_one_time_pad(comp_key)
