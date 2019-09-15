@@ -145,11 +145,11 @@ if __name__ == '__main__':
     # assert(coordinates == ['00', '55', '11', '55', '05', '23', '20', '10', '05', '51', '22', '00', '52'])
     # assert(finalcipher == '15560456102427051060251559')
 
-    print('transposition key' , trans_key)
-    print('one time pad key: ', one_time)
-    print('Cipher1: ', cipher1)
-    print('coordinates: ', coordinates)
-    print('Final cipher text:  ', finalcipher)
+    # print('transposition key' , trans_key)
+    # print('one time pad key: ', one_time)
+    # print('Cipher1: ', cipher1)
+    # print('coordinates: ', coordinates)
+    # print('Final cipher text:  ', finalcipher)
 
     #Decrypt
     decipher1 = reverse_one_time_pad(finalcipher, comp_key[-2:])
