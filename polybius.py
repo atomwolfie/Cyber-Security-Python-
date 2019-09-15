@@ -127,8 +127,10 @@ def decrypt(comp_key, cipher_text):
     
 
 if __name__ == '__main__':
-    comp_key = '0222540015'
-    message = 'hellomynameis'
+    #comp_key = '22024422230021'
+    comp_key = raw_input('Composite key: ')
+    #message = 'asecretmessage'
+    message = raw_input('Plain text: ')
 
     #Encrypt
     one_time = get_one_time_pad(comp_key)
@@ -137,17 +139,17 @@ if __name__ == '__main__':
     coordinates = get_coordinates(cipher1)
     finalcipher = one_pad_crypto_technique(coordinates, one_time)
 
-    assert(one_time == 15)
-    assert(trans_key == 'rate') # ball has repeated characters, not reversable
-    assert(cipher1 == 'elhlmnoymiaes')
-    assert(coordinates == ['00', '55', '11', '55', '05', '23', '20', '10', '05', '51', '22', '00', '52'])
-    assert(finalcipher == '15560456102427051060251559')
+    # assert(one_time == 15)
+    # assert(trans_key == 'rate') # ball has repeated characters, not reversable
+    # assert(cipher1 == 'elhlmnoymiaes')
+    # assert(coordinates == ['00', '55', '11', '55', '05', '23', '20', '10', '05', '51', '22', '00', '52'])
+    # assert(finalcipher == '15560456102427051060251559')
 
     print('transposition key' , trans_key)
     print('one time pad key: ', one_time)
     print('Cipher1: ', cipher1)
     print('coordinates: ', coordinates)
-    print('Ciphertext: ', finalcipher)
+    print('Final cipher text:  ', finalcipher)
 
     #Decrypt
     decipher1 = reverse_one_time_pad(finalcipher, comp_key[-2:])
@@ -155,6 +157,7 @@ if __name__ == '__main__':
     plain_text = col.decode(trans_key, decipher1)
     assert(decipher1 == cipher1)
     assert(plain_text == message)
+    print('Plain text: ', plain_text)
 
 
 
