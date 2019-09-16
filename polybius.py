@@ -126,39 +126,49 @@ def decrypt(comp_key, cipher_text):
     return plain_text
     
 
+
+def get_6_digit_compkey(comp_key):
+
+    new_comp_key = []
+
+
+
+    for digit in range(6):
+        new_comp_key.append(comp_key[digit])
+
+
+    return new_comp_key
+
+
 if __name__ == '__main__':
-    #comp_key = '22024422230021'
-    comp_key = raw_input('Composite key: ')
+    #comp_key = '222021'
+
+    original_comp_key = raw_input('Composite key: ')
+
+    # algorithm only functions with 6 digits
+    #So Ive added this for now to remove extra digits for any key entered
+    comp_key = get_6_digit_compkey(original_comp_key)
+
     #message = 'asecretmessage'
     original_message = raw_input('Plain text: ')
 
     #removing whitespace
     message_nostrings = original_message.replace(' ','')
-    
+
     #converting to all lowercase
     message = message_nostrings.lower()
 
     #Encrypt
-    one_time = get_one_time_pad(comp_key)
+    one_time = get_one_time_pad(original_comp_key)
     trans_key = polybius(comp_key[:-2])
     cipher1 = col.encode(trans_key, message)
     coordinates = get_coordinates(cipher1)
     finalcipher = one_pad_crypto_technique(coordinates, one_time)
+    print('Final cipher text: ', finalcipher)
 
-    # assert(one_time == 15)
-    # assert(trans_key == 'rate') # ball has repeated characters, not reversable
-    # assert(cipher1 == 'elhlmnoymiaes')
-    # assert(coordinates == ['00', '55', '11', '55', '05', '23', '20', '10', '05', '51', '22', '00', '52'])
-    # assert(finalcipher == '15560456102427051060251559')
-
-    # print('transposition key' , trans_key)
-    # print('one time pad key: ', one_time)
-    # print('Cipher1: ', cipher1)
-    # print('coordinates: ', coordinates)
-    # print('Final cipher text:  ', finalcipher)
 
     #Decrypt
-    decipher1 = reverse_one_time_pad(finalcipher, comp_key[-2:])
+    decipher1 = reverse_one_time_pad(finalcipher, original_comp_key[-2:])
     decipher1 = polybius(decipher1)
     plain_text = col.decode(trans_key, decipher1)
     assert(decipher1 == cipher1)
